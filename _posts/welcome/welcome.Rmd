@@ -1,26 +1,217 @@
 ---
-title: "Welcome to My Blog"
+title: "The Swedish Experiment"
 description: |
-  Welcome to our new blog, My Blog. We hope you enjoy 
-  reading what we have to say!
+  “The fundamental purpose of government is to protect its citizens”
 author:
-  - name: Nora Jones 
-    url: https://example.com/norajones
-    affiliation: Spacely Sprockets
-    affiliation_url: https://example.com/spacelysprokets
+  - name: Aryan Jain 
+    url: https://github.com/aryan-monash
+    affiliation: Monash University
+    affiliation_url: https://www.monash.edu
 date: 09-04-2020
 output:
   distill::distill_article:
     self_contained: false
 ---
-
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
 
-# Learn more about creating blogs with Distill at:
-# https://rstudio.github.io/distill/blog.html
+
+```{r}
+# Loading Libraries
+library("COVID19")
+library(tidyverse)
+library(DT)
+library(modeest)
+```
+
+# Data Description
+
+The data was sources from COVID-19 Data Hub, Journal of Open Source Software which compiled the data from various sources. 
+
+The data includes cumulative death count, confirmed case count, test count, recovery count, patients in hospital, patients in ICU, number of patients on ventilator support as well as information about various policy measures on schools, workplace, gatherings, stay-home restrictions, testing policies and government stringency.
+
+```{r, cache=TRUE}
+# Reading the data
+data  <- covid19("SWE", verbose = FALSE)
+covid19_swe_state <- covid19("SWE", level  = 2, verbose = FALSE)
+```
+
+```{r}
+# Subset Data
+covid19_swe <- data %>%
+  select(!c(tests,recovered, hosp, vent, population, iso_alpha_3, iso_alpha_2, iso_numeric, currency, administrative_area_level, administrative_area_level_1, administrative_area_level_2, administrative_area_level_3, latitude, longitude, key, key_apple_mobility, key_google_mobility, internal_movement_restrictions, stay_home_restrictions, cancel_events)) %>%
+  filter(date >= "2020-01-30")
+
+covid19_swe[is.na(covid19_swe)] = 0
+```
+
+
+```{r}
+# Data Wrangling
+covid19_swe$school_closing[covid19_swe$school_closing == 0] = "No Measures"
+covid19_swe$school_closing[covid19_swe$school_closing == 1] = "Recommend Closing"
+covid19_swe$school_closing[covid19_swe$school_closing == 1] = "Require Closing (Some Levels)"
+covid19_swe$school_closing[covid19_swe$school_closing == 1] = "Require Closing (All Levels"
+
+
+covid19_swe$workplace_closing[covid19_swe$workplace_closing == 0] = "No Measures"
+covid19_swe$workplace_closing[covid19_swe$workplace_closing == 1] = "Recommend Closing"
+covid19_swe$workplace_closing[covid19_swe$workplace_closing == 2] = "Require Closing (Some Sectors)"
+covid19_swe$workplace_closing[covid19_swe$workplace_closing == 3] = "Require Closing (All Sectors)"
+
+covid19_swe$gatherings_restrictions[covid19_swe$gatherings_restrictions == 0] = "No Restrictions"
+covid19_swe$gatherings_restrictions[covid19_swe$gatherings_restrictions == 1] = "Mild Restrictions"
+covid19_swe$gatherings_restrictions[covid19_swe$gatherings_restrictions == 2] = "100 - 1000"
+covid19_swe$gatherings_restrictions[covid19_swe$gatherings_restrictions == 3] = "10 - 100"
+covid19_swe$gatherings_restrictions[covid19_swe$gatherings_restrictions == 4] = "Less than 10"
+
+covid19_swe$transport_closing[covid19_swe$transport_closing == 0] = "No Restrictions"
+covid19_swe$transport_closing[covid19_swe$transport_closing == 0] = "Recommend Closing"
+covid19_swe$transport_closing[covid19_swe$transport_closing == 0] = "Require Closing"
+
+covid19_swe$international_movement_restrictions[covid19_swe$international_movement_restrictions == 0] = "No Measures"
+covid19_swe$international_movement_restrictions[covid19_swe$international_movement_restrictions == 1] = "Screening"
+covid19_swe$international_movement_restrictions[covid19_swe$international_movement_restrictions == 2] = "Quarantined Arrival"
+covid19_swe$international_movement_restrictions[covid19_swe$international_movement_restrictions == 3] = "Ban High-risk regions"
+covid19_swe$international_movement_restrictions[covid19_swe$international_movement_restrictions == 4] = "Closed Borders"
+
+covid19_swe$information_campaigns[covid19_swe$information_campaigns == 0] = "No Campaign"
+covid19_swe$information_campaigns[covid19_swe$information_campaigns == 1] = "Uncoordinated Campaign"
+covid19_swe$information_campaigns[covid19_swe$information_campaigns == 2] = "Coordinated Campaign"
+
+covid19_swe$information_campaigns[covid19_swe$information_campaigns == 0] = "No Policy"
+covid19_swe$information_campaigns[covid19_swe$information_campaigns == 1] = "Symptoms and key groups"
+covid19_swe$information_campaigns[covid19_swe$information_campaigns == 2] = "Anyone with symptoms"
+covid19_swe$information_campaigns[covid19_swe$information_campaigns == 3] = "Open public testing"
+
+covid19_swe$information_campaigns[covid19_swe$information_campaigns == 0] = "No Tracing"
+covid19_swe$information_campaigns[covid19_swe$information_campaigns == 1] = "Limited"
+covid19_swe$information_campaigns[covid19_swe$information_campaigns == 2] = "Comprehensive"
+```
+
+
+```{r}
+# Renaming columns for final table
+covid19_swe_table <- covid19_swe %>%
+  rename(Date = date,
+         Cases = confirmed,
+         Deaths = deaths,
+         Schools = school_closing,
+         Workplace  = workplace_closing,
+         Gatherings = gatherings_restrictions,
+         `International Travel` = international_movement_restrictions) %>%
+  select(!c(stringency_index, icu, contact_tracing, transport_closing))
+```
+
+# Unboxing Sweden's Approach
+
+Sweden’s unorthodox approach to the infamous COVID-19 pandemic gained tremendous attention from the media around the world and even earned a moniker “the Swedish experiment”. According to the government officials, like most other countries in the world, it too was working towards minimising transmission but it was also quite focused on minimising social and economical damage. 
+
+The Scandinavian nation kept most of its schools and childcare health facilities open and accessible throughout the outbreak. The implementation of the soft lockdown meant that much of the measures for social distancing relied on voluntary action. 
+
+The country’s chief epidemiologist Anders Tegnell believed that the non-compulsory measures would drastically reduce the reproductive rate of infection and keeping school’s and businesses open would help reach herd immunity faster. (Brennan, 2020)
+
+
+```{r tab1, fig.cap="Sweden's toll and government's response"}
+# Displaying the first table
+DT::datatable(covid19_swe_table[,2:9])
+```
+
+As seen in the Table \@ref(fig:tab1), the country started testing for the virus on January 1, 2020 and encountered its first positive case on February 4 followed by the first death due to virus on March 11.
+
+It can also be observed that from September onward even the voluntary measures were lifted from schools and businesses along with the restrictions on gatherings and international travel.
+
+```{r}
+# Creating Summary Statistics for Sweden
+covid19_swe_sum_table <- covid19_swe %>%
+  summarise(`Peak Cases` = max(confirmed),
+            `Peak Date` = first(date[confirmed == max(confirmed)]),
+            Schools = mlv(school_closing, method='mfv'),
+            Gatherings = mlv(gatherings_restrictions, method='mfv'),
+            Borders = mlv(international_movement_restrictions, method='mfv'),
+            `Mean Stringency` = round(mean(stringency_index),2),
+            `Max Stringency` = max(stringency_index),
+            `SD of Stringency` = round(sd(stringency_index),2),
+            id = "Sweden") %>%
+  rename(Region = id)
+```
+
+```{r}
+# Data wrangling for the states
+covid19_swe_state$school_closing[covid19_swe_state$school_closing == 0] = "No Measures"
+covid19_swe_state$school_closing[covid19_swe_state$school_closing == 1] = "Recommend Closing"
+covid19_swe_state$school_closing[covid19_swe_state$school_closing == 1] = "Require Closing (Some Levels)"
+covid19_swe_state$school_closing[covid19_swe_state$school_closing == 1] = "Require Closing (All Levels"
+
+
+covid19_swe_state$gatherings_restrictions[covid19_swe_state$gatherings_restrictions == 0] = "No Restrictions"
+covid19_swe_state$gatherings_restrictions[covid19_swe_state$gatherings_restrictions == 1] = "Mild Restrictions"
+covid19_swe_state$gatherings_restrictions[covid19_swe_state$gatherings_restrictions == 2] = "100 - 1000"
+covid19_swe_state$gatherings_restrictions[covid19_swe_state$gatherings_restrictions == 3] = "10 - 100"
+covid19_swe_state$gatherings_restrictions[covid19_swe_state$gatherings_restrictions == 4] = "Less than 10"
+
+covid19_swe_state$international_movement_restrictions[covid19_swe_state$international_movement_restrictions == 0] = "No Measures"
+covid19_swe_state$international_movement_restrictions[covid19_swe_state$international_movement_restrictions == 1] = "Screening"
+covid19_swe_state$international_movement_restrictions[covid19_swe_state$international_movement_restrictions == 2] = "Quarantined Arrival"
+covid19_swe_state$international_movement_restrictions[covid19_swe_state$international_movement_restrictions == 3] = "Ban High-risk regions"
+covid19_swe_state$international_movement_restrictions[covid19_swe_state$international_movement_restrictions == 4] = "Closed Borders"
 
 ```
 
 
+```{r}
+# Creating Summary Statistics for Sweden's States
+covid19_swe_state_table <- covid19_swe_state %>% group_by(administrative_area_level_2) %>%
+  summarise(`Peak Cases` = max(confirmed),
+            `Peak Date` = first(date[confirmed == max(confirmed)]),
+            Schools = mlv(school_closing, method='mfv'),
+            Gatherings = mlv(gatherings_restrictions, method='mfv'),
+            Borders = mlv(international_movement_restrictions, method='mfv'),
+            `Mean Stringency` = round(mean(stringency_index),2),
+            `Max Stringency` = max(stringency_index),
+            `SD of Stringency` = round(sd(stringency_index),2)) %>%
+  rename(Region = administrative_area_level_2)
+```
 
+```{r}
+# Binding row for Sweden and its states
+covid19_swe_state_merged <- rbind(covid19_swe_sum_table, covid19_swe_state_table)
+```
+
+
+```{r tab2, fig.cap="Summary Statistisc for Sweden and its states."}
+# Display summary Statistics Table
+DT::datatable(covid19_swe_state_merged, 
+              options = list(autowidth = TRUE, 
+                             columnDefs = list(list(width = '600px', targets = c(1, 2)))))
+```
+
+The Table \@ref(fig:tab2) shows clearly that the country was hit quite severely and the peak death count is among the worst even for such a low density population.
+The Foreign minister suggest that Sweden’s economy is largely export driven and that every 3rd job is tied to export (Henley, 2020). Sweden’s Getinge Group is also among the largest ventilator exporter in the world (Tiwari, 2020).
+
+# Conclusion
+
+While the approach Sweden took to fight the outbreak may remain controversial forever, there are enough facts supporting both sides of the arguments. The trust-based social distancing may not work in most parts of the world but it may have worked to some extent for Sweden. Although Sweden’s per capita death rate was among the highest (Secon, 2020), it should also be noted there are severe downsides of stricter lockdowns too, such as lose of jobs, depression, postponed healthcare and even delay of justice. Nevertheless, it would be quite interesting to observe how the world will look towards Sweden’s approach years from now even though we may never be able to decisively conclude whether “The Swedish Experiment” was in-fact a success or a failure.
+
+
+# References
+
+Brennan, B. (2020). What Sweden's experience tells us about the herd immunity model. Retrieved 4 September 2020, from https://www.abc.net.au/news/2020-08-20/swedens-herd-immunity-strategy-for-coronavirus-covid-19/12570918
+
+Johns Hopkins Center for Systems Science and Engineering (2020),
+https://github.com/CSSEGISandData/COVID-19
+  
+Hale Thomas, Sam Webster, Anna Petherick, Toby Phillips, and Beatriz Kira (2020).
+Oxford COVID-19 Government Response Tracker, Blavatnik School of Government.
+
+Henley, J. (2020). Don’t judge Sweden’s light touch on Covid-19 yet, says minister. Retrieved 4 September 2020, from https://www.theguardian.com/world/2020/apr/27/dont-judge-swedens-light-touch-on-covid-19-yet-says-minister
+
+Public Health Agency, Sweden (2020),
+https://oppnadata.se/datamangd/#esc_entry=1424&esc_context=525
+
+Secon, H. (2020). Sweden's per capita coronavirus death toll is among the highest in the world — a sign its decision to avoid a lockdown may not be working. Retrieved 4 September 2020, from https://www.businessinsider.com.au/sweden-coronavirus-per-capita-death-rate-among-highest-2020-5?r=US&IR=T
+
+Tiwari, R. (2020). Global Ventilators Market - 50% Market Share Held by 5 Top Companies. Retrieved 4 September 2020, from https://www.prnewswire.com/news-releases/global-ventilators-market---50-market-share-held-by-5-top-companies-591894561.html
+
+World Bank Open Data (2018), https://data.worldbank.org/indicator/SP.POP.TOTL

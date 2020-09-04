@@ -1,18 +1,18 @@
 [
   {
     "path": "posts/welcome/",
-    "title": "Welcome to My Blog",
-    "description": "Welcome to our new blog, My Blog. We hope you enjoy \nreading what we have to say!",
+    "title": "The Swedish Experiment",
+    "description": "“The fundamental purpose of government is to protect its citizens”",
     "author": [
       {
-        "name": "Nora Jones",
-        "url": "https://example.com/norajones"
+        "name": "Aryan Jain",
+        "url": "https://github.com/aryan-monash"
       }
     ],
     "date": "2020-09-04",
     "categories": [],
     "preview": {},
-    "last_modified": "2020-09-04T20:07:26+10:00",
-    "input_file": {}
+    "last_modified": "2020-09-04T22:25:31+10:00",
+    "input_file": "welcome.utf8.md"
   }
 ]
