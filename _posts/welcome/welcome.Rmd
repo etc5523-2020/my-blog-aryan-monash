@@ -207,6 +207,9 @@ Oxford COVID-19 Government Response Tracker, Blavatnik School of Government.
 
 Henley, J. (2020). Don’t judge Sweden’s light touch on Covid-19 yet, says minister. Retrieved 4 September 2020, from https://www.theguardian.com/world/2020/apr/27/dont-judge-swedens-light-touch-on-covid-19-yet-says-minister
 
+Paul Poncet (2019). modeest: Mode Estimation. R package version 2.4.0.
+https://CRAN.R-project.org/package=modeest
+
 Public Health Agency, Sweden (2020),
 https://oppnadata.se/datamangd/#esc_entry=1424&esc_context=525
 
@@ -214,4 +217,10 @@ Secon, H. (2020). Sweden's per capita coronavirus death toll is among the highes
 
 Tiwari, R. (2020). Global Ventilators Market - 50% Market Share Held by 5 Top Companies. Retrieved 4 September 2020, from https://www.prnewswire.com/news-releases/global-ventilators-market---50-market-share-held-by-5-top-companies-591894561.html
 
+Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software,
+4(43), 1686, https://doi.org/10.21105/joss.01686
+
 World Bank Open Data (2018), https://data.worldbank.org/indicator/SP.POP.TOTL
+
+Yihui Xie, Joe Cheng and Xianying Tan (2020). DT: A Wrapper of the JavaScript Library
+'DataTables'. R package version 0.15. https://CRAN.R-project.org/package=DT
