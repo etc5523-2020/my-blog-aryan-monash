@@ -83,7 +83,7 @@ plot_ly(x = ~confirmed, y = ~fct_reorder(administrative_area_level_1, confirmed)
 
 
 ```
-It had only been a month since SARS-CoV-2 was officially declared a pandemic and the middle eastern country was already the **7th worst affected country** in the world purely by looking at the total count of cases. Some reports even suggested that Turkey had the fastest rising infection rate in the world.
+It had only been a month since SARS-CoV-2 was officially declared a pandemic and the middle eastern country was already the **7th worst affected country** in the world purely by looking at the total count of cases. Some reports even suggested that Turkey had the fastest rising infection rate in the world. (McKernan, 2020)
 
 ```{r}
 tur_plt <- turkey_cov %>% 
@@ -122,7 +122,7 @@ top_covid_resp_str <- top_covid_resp %>%
 
 Measuring the response of a government and its health care facilities in such an unprecedented and uncharted situation is not an easy feat. There are countless variables to account for and one must also keep in mind that in such situations there are often concerns regarding availability of information and distortion of facts. There are several researches going on around the world how several governments have under-reporter cases and in some cases even spread misinformation.
 
-To make analyses easier, we will look at the stringency index available in our data which account of several response variables such as school closing, workplace closures, travel bans, income support, contact tracing and various other oridnal variables to arrive at an index from 0 to 100 (100 being the strictest) to measure the overall strictness of world governments.
+To make analyses easier, we will look at the stringency index available in our data which account of several response variables such as school closing, workplace closures, travel bans, income support, contact tracing and various other oridnal variables to arrive at an index from 0 to 100 (100 being the strictest) to measure the overall strictness of world governments. (Hale, 2020)
 
 ```{r}
 pal <- colorBin(palette = "viridis", domain = top_covid_resp_str$measure_value, bins = 4)
@@ -213,7 +213,7 @@ ggarrange(plt_now, plt_peak, common.legend = TRUE, ncol = 1)
 
 Having a closer look at the restrictions imposed by the governments reveal that situation is more or less the same for most countries except Turkey and Russia who have eased border restrictions with Turkey even allowing screened arrival while most other countries have either level 3 or 4 ban. It also reveals that the Turkey is following comprehensive contact tracing guidelines and has maintained school closures. However, it shows that the country is only testing symptomatic patients and open public testing is not being done. 
 
-It should also be noted that Turkey unlike most other countries produces its own PPE kit and has been providing its citizens and official residents five surgical masks per week free of charge. The Anatolian nation has also been among the few early adopters of the controversial anti-malarial drug, *hydroxychloroquine* for treating patients with covid-19.
+It should also be noted that Turkey unlike most other countries produces its own PPE kit and has been providing its citizens and official residents five surgical masks per week free of charge (Guzel, 2020). The Anatolian nation has also been among the few early adopters of the controversial anti-malarial drug, *hydroxychloroquine* for treating patients with covid-19. (Guerin, 2020)
 
 The faultlessness of the measures taken by the Erdoğan government and its health care services may remain debatable but one cannot discount the fact that Turkey is among the "**quick to respond**" nations when it comes to this malevolent pandemic.
 
@@ -226,15 +226,23 @@ Brennan, B. (2020). What Sweden's experience tells us about the herd immunity mo
 C. Sievert. Interactive Web-Based Data Visualization with R, plotly, and shiny. Chapman
 and Hall/CRC Florida, 2020. https://plotly-r.com
 
-Joe Cheng, Bhaskar Karambelkar and Yihui Xie (2019). leaflet: Create Interactive Web Maps with the JavaScript 'Leaflet' Library. R package version 2.0.3. https://CRAN.R-project.org/package=leaflet
-  
-Johns Hopkins Center for Systems Science and Engineering (2020),
-https://github.com/CSSEGISandData/COVID-19
-  
+Guerin, O. (2020). Coronavirus: How Turkey took control of Covid-19 emergency. Retrieved 18 September 2020, from https://www.bbc.com/news/world-europe-52831017
+
+Guzel, E. (2020). ANALYSIS - Turkey’s healthcare system: an example to follow. Retrieved 18 September 2020, from https://www.aa.com.tr/en/analysis/analysis-turkey-s-healthcare-system-an-example-to-follow/1824425#
+
+Hale, T. (2020). Coronavirus Government Response Tracker. Retrieved 18 September 2020, from https://www.bsg.ox.ac.uk/research/research-projects/coronavirus-government-response-tracker
+
 Hale Thomas, Sam Webster, Anna Petherick, Toby Phillips, and Beatriz Kira (2020).
 Oxford COVID-19 Government Response Tracker, Blavatnik School of Government.
 
 Henley, J. (2020). Don’t judge Sweden’s light touch on Covid-19 yet, says minister. Retrieved 4 September 2020, from https://www.theguardian.com/world/2020/apr/27/dont-judge-swedens-light-touch-on-covid-19-yet-says-minister
+
+Joe Cheng, Bhaskar Karambelkar and Yihui Xie (2019). leaflet: Create Interactive Web Maps with the JavaScript 'Leaflet' Library. R package version 2.0.3. https://CRAN.R-project.org/package=leaflet
+  
+Johns Hopkins Center for Systems Science and Engineering (2020),
+https://github.com/CSSEGISandData/COVID-19
+
+McKernan, B. (2020). Turkey's Covid-19 infection rate rising fastest in the world. Retrieved 18 September 2020, from https://www.theguardian.com/world/2020/apr/07/turkeys-covid-19-infection-rate-rising-fastest-in-the-world
 
 Paul Poncet (2019). modeest: Mode Estimation. R package version 2.4.0.
 https://CRAN.R-project.org/package=modeest
@@ -246,3 +254,6 @@ World Bank Open Data (2018), https://data.worldbank.org/indicator/SP.POP.TOTL
 
 Yihui Xie, Joe Cheng and Xianying Tan (2020). DT: A Wrapper of the JavaScript Library
 'DataTables'. R package version 0.15. https://CRAN.R-project.org/package=DT
+
+
+
