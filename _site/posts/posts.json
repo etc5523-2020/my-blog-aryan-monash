@@ -11,8 +11,24 @@
     ],
     "date": "2020-09-04",
     "categories": [],
-    "preview": {},
-    "last_modified": "2020-09-17T12:59:42+10:00",
+    "preview": "posts/swedish-exp/swedish-exp_files/figure-html5/fig1-1.png",
+    "last_modified": "2020-09-17T15:51:39+10:00",
     "input_file": {}
+  },
+  {
+    "path": "posts/turkey-cov/",
+    "title": "The Turkish Model",
+    "description": "“The fundamental purpose of government is to protect its citizens”",
+    "author": [
+      {
+        "name": "Aryan Jain",
+        "url": "https://github.com/aryan-monash"
+      }
+    ],
+    "date": "2020-09-04",
+    "categories": [],
+    "preview": "posts/turkey-cov/turkey-cov_files/figure-html5/unnamed-chunk-13-1.png",
+    "last_modified": "2020-09-18T16:06:47+10:00",
+    "input_file": "turkey-cov.utf8.md"
   }
 ]

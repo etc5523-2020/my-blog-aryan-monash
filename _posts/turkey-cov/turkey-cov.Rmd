@@ -1,0 +1,247 @@
+---
+title: "The Turkish Model"
+description: |
+  “The fundamental purpose of government is to protect its citizens”
+author:
+  - name: Aryan Jain 
+    url: https://github.com/aryan-monash
+    affiliation: Monash University
+    affiliation_url: https://www.monash.edu
+date: 09-04-2020
+output:
+  distill::distill_article:
+    self_contained: false
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+# Loading Libraries
+library("COVID19")
+library(tidyverse)
+library(DT)
+library(modeest)
+library(scales)
+library(plotly)
+library(leaflet)
+library(ggpubr)
+```
+
+# Data Description
+
+As with the previous post, the data was sourced from COVID-19 Data Hub, Journal of Open Source Software which compiled the data from various sources including Johns Hopkins Center for Systems Science and Engineering, Oxford COVID-19 Government Response Tracker Topics and Corona türkiye güncel dataset among others.
+
+The data includes cumulative total death count, confirmed case count, total test count, total recovered count, patients in hospital, patients in ICU, number of patients on ventilator support as well as information about various policy measures on schools, workplace, gatherings, stay-home restrictions, testing policies and government stringency.
+
+```{r, cache=TRUE}
+# Reading the data
+data  <- covid19(verbose = FALSE)
+turkey_cov <- covid19("TUR", verbose = FALSE)
+```
+
+```{r tab1}
+# Displaying the first table
+turkey_cov[,2:20] %>%
+  filter(date >= "2020-03-11") %>%
+DT::datatable(options = list(scrollX = TRUE, pageLength = 5))
+```
+
+The table above shows the brief view of the raw data which will be used for analyses in the subsequent sections. 
+
+## How was turkey hit?
+
+```{r}
+colorv <- c(rep('rgba(204,204,204,1)', each = 20))
+colorv[17] <- "rgba(222,45,38,0.8)"
+
+top_covid <- data %>%
+  filter(date == "2020-09-10") %>%
+  arrange(desc(confirmed)) %>%
+  head(18)
+
+plot_ly(data = top_covid, x = ~confirmed, y = ~fct_reorder(administrative_area_level_1, confirmed), type = "bar", marker = list(color = colorv)) %>%
+  layout(xaxis = list(title = ""),
+         yaxis = list(title = ""))
+```
+On 11 March, 2020, Turkey declared it's first coronavirus positive cases which was incidentally the date the World Health Organization (WHO) official declared SARS-CoV-2 (aka coronavirus) as a pandemic. [https://www.who.int/dg/speeches/detail/who-director-general-s-opening-remarks-at-the-media-briefing-on-covid-19---11-march-2020]
+
+Looking at the data today, even with **300,000** cases, one may not quite understand the extent of horror that the country faced. At the time of this blog, Turkey's total case count is far lower then some of the worst affected countries such as the United States with 6.5 Million followed by India with 5.11 Million cases as seen in the graph above. However, to comprehend the gravity of hardships that the citizens of the Republic of Turkey essentially faced we shall travel back to late April.
+
+```{r}
+colorp <- c(rep('rgba(204,204,204,1)', each = 8))
+colorp[7] <- "rgba(222,45,38,0.8)"
+
+data %>%
+  filter(date == "2020-04-23") %>%
+  arrange(desc(confirmed)) %>%
+  head(8) %>%
+plot_ly(x = ~confirmed, y = ~fct_reorder(administrative_area_level_1, confirmed), type = "bar", marker = list(color = colorp)) %>%
+  layout(xaxis = list(title = ""),
+         yaxis = list(title = ""))
+
+
+```
+It had only been a month since SARS-CoV-2 was officially declared a pandemic and the middle eastern country was already the **7th worst affected country** in the world purely by looking at the total count of cases. Some reports even suggested that Turkey had the fastest rising infection rate in the world.
+
+```{r}
+tur_plt <- turkey_cov %>% 
+  filter(date >= "2020-03-01") %>%
+  mutate(active_cases = confirmed - deaths - recovered) %>%
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = active_cases, color = "Active")) +
+  #geom_line(aes(y = confirmed, color = "confirmed")) +
+  geom_line(aes(y = recovered, color = "Recovered")) +
+  geom_line(aes(y = deaths, color = "Deaths")) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_y_continuous(label = comma) +
+  scale_color_manual("", values = c("#F2A11F", "#DE2D3C", "#2DC878")) +
+  ylab("") +
+  xlab("")
+
+ggplotly(tur_plt)
+```
+
+The graph shows that on 23 April, 2020, the country reached its peak active cases at around **80k** with the total death count due to covid-19 reaching **2491**. Since then the countries steep recovered rate has managed to slow down the spread and drop the active cases to the low teens in July and August. The Graph also suggest a slow formation of another peak and it would be interesting to observe how the government responds to it.
+
+```{r}
+top_covid_resp <- data %>%
+  filter(date == "2020-08-09") %>%
+  filter(id %in% unique(top_covid$id)) %>%
+  pivot_longer(cols = school_closing:stringency_index, names_to = "measures", values_to = "measure_value")
+```
+
+```{r}
+top_covid_resp_str <- top_covid_resp %>%
+  filter(measures == "stringency_index")
+```
+
+# How did Turkey respond?
+
+Measuring the response of a government and its health care facilities in such an unprecedented and uncharted situation is not an easy feat. There are countless variables to account for and one must also keep in mind that in such situations there are often concerns regarding availability of information and distortion of facts. There are several researches going on around the world how several governments have under-reporter cases and in some cases even spread misinformation.
+
+To make analyses easier, we will look at the stringency index available in our data which account of several response variables such as school closing, workplace closures, travel bans, income support, contact tracing and various other oridnal variables to arrive at an index from 0 to 100 (100 being the strictest) to measure the overall strictness of world governments.
+
+```{r}
+pal <- colorBin(palette = "viridis", domain = top_covid_resp_str$measure_value, bins = 4)
+
+leaflet(top_covid_resp_str) %>%
+    addTiles() %>%
+    addCircleMarkers(~longitude, 
+                     ~latitude, 
+                     label = ~administrative_area_level_1, 
+                     radius = ~measure_value/10,
+                     color = ~pal(measure_value),
+                     layerId = ~administrative_area_level_1) %>%
+    addLegend("topright", 
+              pal = pal, 
+              values = ~measure_value, 
+              title = "Stringency", 
+              opacity = 1
+    )
+```
+
+The plot compares the latest measure of stringency for the countries observed in the first figure in the last section. It can be observed that Turkey's stringency index is among the lowest being in the range of 40-50. However we can also see that countries with much stricter response such as India, U.S. , Brazil, Russia and Peru are not necessarily doing better as we observed in the first figure.
+
+This suggest that the strictest approach may not always be the best one. Also, the demographics, economy and population of these nations could greatly affects their situation and the "**one glove fits all**" approach doesn't seem to work here.
+
+```{r}
+top_countries <- head(top_covid$id)
+top_covid_resp_cont <- top_covid_resp %>%
+  filter(id %in% top_countries | id == "TUR") %>%
+  filter(measures %in% c("contact_tracing", "school_closing", "testing_policy", "international_movement_restrictions"))
+
+top_covid_resp_cont$measures[top_covid_resp_cont$measures == "contact_tracing"] = "Contact Tracing"
+top_covid_resp_cont$measures[top_covid_resp_cont$measures == "testing_policy"] = "Testing Policy"
+top_covid_resp_cont$measures[top_covid_resp_cont$measures == "international_movement_restrictions"] = "Border Restrictions"
+top_covid_resp_cont$measures[top_covid_resp_cont$measures == "school_closing"] = "School Closing"
+```
+
+
+```{r}
+plt_now <- ggplot(top_covid_resp_cont, aes(x = administrative_area_level_1, y = measure_value, fill = measures)) +
+  geom_col(position = "dodge2") +
+  theme_light() +
+  theme(legend.title = element_blank()) +
+  xlab("") +
+  ylab("") +
+  ggtitle("Current") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_fill_viridis_d()
+```
+
+```{r}
+top_covid_resp_peak <- data %>%
+  filter(date <= "2020-08-09") %>%
+  mutate(active_cases = confirmed - deaths - recovered) %>%
+  group_by(id) %>%
+  filter(active_cases == max(active_cases, na.rm = TRUE)) %>%
+  filter(date == min(date)) %>%
+  filter(id %in% top_countries | id == "TUR") %>%
+  pivot_longer(cols = school_closing:stringency_index, names_to = "measures", values_to = "measure_value") %>%
+  filter(measures %in% c("contact_tracing", "school_closing", "testing_policy", "international_movement_restrictions"))
+
+top_covid_resp_peak$measures[top_covid_resp_peak$measures == "contact_tracing"] = "Contact Tracing"
+top_covid_resp_peak$measures[top_covid_resp_peak$measures == "testing_policy"] = "Testing Policy"
+top_covid_resp_peak$measures[top_covid_resp_peak$measures == "international_movement_restrictions"] = "Border Restrictions"
+top_covid_resp_peak$measures[top_covid_resp_peak$measures == "school_closing"] = "School Closing"
+```
+
+```{r}
+plt_peak <- ggplot(top_covid_resp_peak, aes(x = administrative_area_level_1, y = measure_value, fill = measures)) +
+  geom_col(position = "dodge2") +
+  theme_light() +
+  theme(legend.title = element_blank()) +
+  xlab("") +
+  ylab("") +
+  ggtitle("Peak") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_fill_viridis_d()
+```
+
+```{r}
+ggarrange(plt_now, plt_peak, common.legend = TRUE, ncol = 1)
+```
+### Policy measures
+
+- *Border Restrictions*	0: No measures - 1: Screening - 2: Quarantine arrivals from high-risk regions - 3: Ban on high-risk regions - 4: Total border closure.
+- *Contact Tracing*	0: No contact tracing - 1: Limited contact tracing, not done for all cases - 2: Comprehensive contact tracing, done for all cases.
+- *School Closing*	0: No measures - 1: Recommend closing - 2: Require closing (only some levels or categories, eg just high school, or just public schools - 3: Require closing all levels.
+- *Testing Policy*	0: No testing policy - 1: Only those who both (a) have symptoms AND (b) meet specific criteria - 2: testing of anyone showing COVID-19 symptoms - 3: open public testing.
+
+Having a closer look at the restrictions imposed by the governments reveal that situation is more or less the same for most countries except Turkey and Russia who have eased border restrictions with Turkey even allowing screened arrival while most other countries have either level 3 or 4 ban. It also reveals that the Turkey is following comprehensive contact tracing guidelines and has maintained school closures. However, it shows that the country is only testing symptomatic patients and open public testing is not being done. 
+
+It should also be noted that Turkey unlike most other countries produces its own PPE kit and has been providing its citizens and official residents five surgical masks per week free of charge. The Anatolian nation has also been among the few early adopters of the controversial anti-malarial drug, *hydroxychloroquine* for treating patients with covid-19.
+
+The faultlessness of the measures taken by the Erdoğan government and its health care services may remain debatable but one cannot discount the fact that Turkey is among the "**quick to respond**" nations when it comes to this malevolent pandemic.
+
+# References
+
+Alboukadel Kassambara (2020). ggpubr: 'ggplot2' Based Publication Ready Plots. R package version 0.4.0. https://CRAN.R-project.org/package=ggpubr
+
+Brennan, B. (2020). What Sweden's experience tells us about the herd immunity model. Retrieved 4 September 2020, from https://www.abc.net.au/news/2020-08-20/swedens-herd-immunity-strategy-for-coronavirus-covid-19/12570918
+
+C. Sievert. Interactive Web-Based Data Visualization with R, plotly, and shiny. Chapman
+and Hall/CRC Florida, 2020. https://plotly-r.com
+
+Joe Cheng, Bhaskar Karambelkar and Yihui Xie (2019). leaflet: Create Interactive Web Maps with the JavaScript 'Leaflet' Library. R package version 2.0.3. https://CRAN.R-project.org/package=leaflet
+  
+Johns Hopkins Center for Systems Science and Engineering (2020),
+https://github.com/CSSEGISandData/COVID-19
+  
+Hale Thomas, Sam Webster, Anna Petherick, Toby Phillips, and Beatriz Kira (2020).
+Oxford COVID-19 Government Response Tracker, Blavatnik School of Government.
+
+Henley, J. (2020). Don’t judge Sweden’s light touch on Covid-19 yet, says minister. Retrieved 4 September 2020, from https://www.theguardian.com/world/2020/apr/27/dont-judge-swedens-light-touch-on-covid-19-yet-says-minister
+
+Paul Poncet (2019). modeest: Mode Estimation. R package version 2.4.0.
+https://CRAN.R-project.org/package=modeest
+
+Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software,
+4(43), 1686, https://doi.org/10.21105/joss.01686
+
+World Bank Open Data (2018), https://data.worldbank.org/indicator/SP.POP.TOTL
+
+Yihui Xie, Joe Cheng and Xianying Tan (2020). DT: A Wrapper of the JavaScript Library
+'DataTables'. R package version 0.15. https://CRAN.R-project.org/package=DT

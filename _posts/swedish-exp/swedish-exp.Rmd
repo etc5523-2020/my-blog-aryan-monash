@@ -27,7 +27,7 @@ library(modeest)
 
 # Data Description
 
-The data was sources from COVID-19 Data Hub, Journal of Open Source Software which compiled the data from various sources. 
+The data was sourced from COVID-19 Data Hub, Journal of Open Source Software which compiled the data from various sources. 
 
 The data includes cumulative death count, confirmed case count, test count, recovery count, patients in hospital, patients in ICU, number of patients on ventilator support as well as information about various policy measures on schools, workplace, gatherings, stay-home restrictions, testing policies and government stringency.
 
@@ -105,6 +105,16 @@ covid19_swe_table <- covid19_swe %>%
 ```
 
 # Unboxing Sweden's Approach
+
+```{r fig1}
+ggplot(covid19_swe, aes(x = date)) +
+  geom_line(aes(y = confirmed, color = "Cases")) + 
+  geom_line(aes(y = deaths, color = "Deaths")) +
+  theme_minimal() +
+  theme(legend.position = "top", legend.title = element_blank(), axis.title.x = element_blank(), axis.title.y = element_blank()) +
+  scale_color_manual(values = alpha(c("#000000", "#FF5733")))
+
+```
 
 Sweden’s unorthodox approach to the infamous COVID-19 pandemic gained tremendous attention from the media around the world and even earned a moniker “the Swedish experiment”. According to the government officials, like most other countries in the world, it too was working towards minimising transmission but it was also quite focused on minimising social and economical damage. 
 

@@ -1,9 +1,19 @@
 ---
-title: "About this blog"
+title: "About the blog"
 description: |
-  Some additional details about the blog
+  This blogging website is part of course curriculum for ETC5523 - Monash University
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+
+# About the author
+
+#### **Aryan Jain**
+<br> Master of Business Analytics
+<br> Monash University
+
+[GitHub](https://github.com/aryan-monash) |
+[LinkedIn](https://www.linkedin.com/in/jainaryan/) | 
+[Kaggle](https://www.kaggle.com/jaryan)
