@@ -1,5 +1,21 @@
 [
   {
+    "path": "posts/turkey-cov/",
+    "title": "The Turkish Model",
+    "description": "“It is not what we have that will make us a great nation; it is the way in which we use it”\n- *Theodore Roosevelt*",
+    "author": [
+      {
+        "name": "Aryan Jain",
+        "url": "https://github.com/aryan-monash"
+      }
+    ],
+    "date": "2020-09-18",
+    "categories": [],
+    "preview": "posts/turkey-cov/turkey-cov_files/figure-html5/unnamed-chunk-13-1.png",
+    "last_modified": "2020-09-18T16:24:45+10:00",
+    "input_file": "turkey-cov.utf8.md"
+  },
+  {
     "path": "posts/swedish-exp/",
     "title": "The Swedish Experiment",
     "description": "“The fundamental purpose of government is to protect its citizens”",
@@ -14,21 +30,5 @@
     "preview": "posts/swedish-exp/swedish-exp_files/figure-html5/fig1-1.png",
     "last_modified": "2020-09-17T15:51:39+10:00",
     "input_file": {}
-  },
-  {
-    "path": "posts/turkey-cov/",
-    "title": "The Turkish Model",
-    "description": "“The fundamental purpose of government is to protect its citizens”",
-    "author": [
-      {
-        "name": "Aryan Jain",
-        "url": "https://github.com/aryan-monash"
-      }
-    ],
-    "date": "2020-09-04",
-    "categories": [],
-    "preview": "posts/turkey-cov/turkey-cov_files/figure-html5/unnamed-chunk-13-1.png",
-    "last_modified": "2020-09-18T16:06:47+10:00",
-    "input_file": "turkey-cov.utf8.md"
   }
 ]

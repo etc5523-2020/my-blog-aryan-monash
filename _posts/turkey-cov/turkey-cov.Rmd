@@ -1,13 +1,14 @@
 ---
 title: "The Turkish Model"
 description: |
-  “The fundamental purpose of government is to protect its citizens”
+  “It is not what we have that will make us a great nation; it is the way in which we use it”
+  - *Theodore Roosevelt*
 author:
   - name: Aryan Jain 
     url: https://github.com/aryan-monash
     affiliation: Monash University
     affiliation_url: https://www.monash.edu
-date: 09-04-2020
+date: 09-18-2020
 output:
   distill::distill_article:
     self_contained: false
@@ -66,7 +67,7 @@ plot_ly(data = top_covid, x = ~confirmed, y = ~fct_reorder(administrative_area_l
 ```
 On 11 March, 2020, Turkey declared it's first coronavirus positive cases which was incidentally the date the World Health Organization (WHO) official declared SARS-CoV-2 (aka coronavirus) as a pandemic. [https://www.who.int/dg/speeches/detail/who-director-general-s-opening-remarks-at-the-media-briefing-on-covid-19---11-march-2020]
 
-Looking at the data today, even with **300,000** cases, one may not quite understand the extent of horror that the country faced. At the time of this blog, Turkey's total case count is far lower then some of the worst affected countries such as the United States with 6.5 Million followed by India with 5.11 Million cases as seen in the graph above. However, to comprehend the gravity of hardships that the citizens of the Republic of Turkey essentially faced we shall travel back to late April.
+Looking at the data today, even with **300,000 cases**, one may not quite understand the extent of horror that the country faced. At the time of this blog, Turkey's total case count is far lower then some of the worst affected countries such as the United States with 6.5 Million followed by India with 5.11 Million cases as seen in the graph above. However, to comprehend the gravity of hardships that the citizens of the Republic of Turkey essentially faced we shall travel back to late April.
 
 ```{r}
 colorp <- c(rep('rgba(204,204,204,1)', each = 8))
@@ -142,7 +143,7 @@ leaflet(top_covid_resp_str) %>%
     )
 ```
 
-The plot compares the latest measure of stringency for the countries observed in the first figure in the last section. It can be observed that Turkey's stringency index is among the lowest being in the range of 40-50. However we can also see that countries with much stricter response such as India, U.S. , Brazil, Russia and Peru are not necessarily doing better as we observed in the first figure.
+The plot compares the latest measure of stringency for the countries observed in the first figure in the last section. It can be observed that Turkey's stringency index is among the lowest being in the range of **40-50**. However we can also see that countries with much stricter response such as India, U.S. , Brazil, Russia and Peru are not necessarily doing better as we observed in the first figure.
 
 This suggest that the strictest approach may not always be the best one. Also, the demographics, economy and population of these nations could greatly affects their situation and the "**one glove fits all**" approach doesn't seem to work here.
 
