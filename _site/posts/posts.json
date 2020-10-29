@@ -1,5 +1,21 @@
 [
   {
+    "path": "posts/package-review/",
+    "title": "Review of Coviddata package by Karina Zou",
+    "description": "Brace yourselves, the review is here.",
+    "author": [
+      {
+        "name": "Aryan Jain",
+        "url": "https://github.com/aryan-monash"
+      }
+    ],
+    "date": "2020-10-29",
+    "categories": [],
+    "preview": {},
+    "last_modified": "2020-10-29T20:01:41+11:00",
+    "input_file": {}
+  },
+  {
     "path": "posts/shiny-app/",
     "title": "Introducing the COVID-19 Exploration app",
     "description": "_An all new state of the art app with minimalistic design and user friendly interface_",
@@ -12,8 +28,8 @@
     "date": "2020-10-16",
     "categories": [],
     "preview": "posts/shiny-app/images/homepage.png",
-    "last_modified": "2020-10-16T21:15:32+11:00",
-    "input_file": "shiny-app.utf8.md"
+    "last_modified": "2020-10-16T21:15:33+11:00",
+    "input_file": {}
   },
   {
     "path": "posts/turkey-cov/",

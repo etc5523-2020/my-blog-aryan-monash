@@ -1,0 +1,78 @@
+---
+title: "Review of Coviddata package by Karina Zou"
+description: Brace yourselves, the review is here.
+author:
+  - name: Aryan Jain 
+    url: https://github.com/aryan-monash
+    affiliation: Monash University
+    affiliation_url: https://www.monash.edu
+date: 10-29-2020
+output:
+  distill::distill_article:
+    self_contained: false
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+## Overview
+
+The purpose of this blog is to review the R package **CovidData** developed by Karina Zou.
+The package consists an embedded shiny app, a dataset named *coronavirus.csv* sourced from Johns Hopkins University Center for Systems Science and Engineering and 3 functions including *launch_app()*, *filter_data()* and *select_countryInput()*.
+
+## What did I think this package would do? Did it do it?
+
+My expectations from the package were to be able to run the app as instructed in the readme section on Github and interact with well documented and easy to understand user controls which would then produce beautiful plots. Unfortunately, I was not able to locate a vignette of the package and so by looking at the readme as well as the code, I realized that the author intended to showcase a lineplot, a plotly choropleth map and a DT table.
+
+#### Launching the app
+
+Regrettably, after several failed attempts at launching the app through the package as well as in a separate environment, I had to come to the conclusion that the app was not in working condition.
+
+However, I did try to access the author's blog to get an idea of what went wrong and got to know that she was struggling with the assignments and tried to finish the project on time after her request on an extention got declined.
+
+The package contained two tests for the functions mentioned earlier; *test-filter* and *test-Countryselection*.
+
+## Are there improvements to be made?
+
+#### Improvements to the package
+
+Sadly, the package did not contain R CMD check and all the checks on Github failed as well. A check could've been added to the readme using *usethis::use_github_action_check_standard()*.
+
+It was enlightening to see that the author did perform unit tests for individual functions. While *test-Countryselection* ran successfully, *test-filter* failed.
+
+#### Improvements in the app
+
+The code was quite straightforward, although it did not make use of the newly added functions *filter_data()* and *select_countryInput()*. For selecting the countries, a selectInput function would've made more sense as we're only selecting one input at a time. Also, the table could've included some statistical information about the data.
+
+#### Improvements in documentation
+
+This is the section which needs the most work in my opinion. While getting the app to function is important, a well documented package would have made the submission far better.
+
+The Readme.md file stated that the package was uploaded to CRAN which I couldn't confirm and was most likely an error. Also, it didn't contain R CMD Check and was submitted without proof-reading which resulted in some left-over text at the end.
+
+Furthermore, there the included vignette rmd was left empty and there was no pkgdown.yml in the repo.
+
+## What I learnt from reviewing the package?
+
+Reviewing this package taught me the importance of proof-reading assignments before submission and also that giving your best and delivering on time is paramount. 
+
+## Appendix
+
+- [x] As the reviewer I confirm that there are no [conflicts of interest](https://devguide.ropensci.org/policies.html#coi) for me to review this work (If you are unsure whether you are in conflict, please speak to your editor _before_ starting your review).
+                                                                            
+#### Documentation
+
+The package includes all the following forms of documentation:
+  
+- [x] **Installation instructions:** for the development version of package and any non-standard dependencies in README
+- [ ] **Vignette(s)** demonstrating major functionality that runs successfully locally
+- [x] **Function Documentation:** for all exported functions in R help
+- [ ] **Examples** for all exported functions in R Help that run successfully locally
+
+ 
+#### Functionality
+
+- [x] **Installation:** Installation succeeds as documented.
+- [ ] **Functionality:** Any functional claims of the software been confirmed.
+- [ ] **Automated tests:** Unit tests cover essential functions of the package and a reasonable range of inputs and conditions. All tests pass on the local machine.
